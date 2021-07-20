@@ -1,18 +1,17 @@
-version: "3.7"
-
 services:
-  fuji_app_container:
-    build:
-      context: "."
-      dockerfile: "./Dockerfile"
-    ports:
-      - "1071:1071"        
-    image: "steinsteiny/fuji:${GIT_BRANCH}"
-
-  fuji-tester:
-    image: "indigodatacloud/ci-images:python3.6"
-    container_name: "fuji-tester"
+  Foetsie:
+    command: sleep 6000000
+    image: steinsteiny/fuji:fair
     volumes:
-     - type: bind
-       source: ./fuji_app_repo
-       target: /fuji-tester
+    - source: ./
+      target: /sqaaas-build
+      type: bind
+    working_dir: /sqaaas-build
+  qc.fair_muzzy-vermilion-flamingo:
+    image: steinsteiny/fuji:fair
+    volumes:
+    - source: ./
+      target: /sqaaas-build
+      type: bind
+    working_dir: /sqaaas-build
+version: '3.7'
