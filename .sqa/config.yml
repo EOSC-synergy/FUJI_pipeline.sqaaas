@@ -1,37 +1,17 @@
 config:
-  node_agent: 'docker_compose'
-  deploy_template: '.sqa/docker-compose.yml'
+  credentials: []
   project_repos:
-    fuji_app_repo:
-      repo: 'https://github.com/EOSC-synergy/fuji'
-      branch: master
-  # credentials:
-  #     - type: username_password
-  #       id: wilkos-dockerhub
-  #       username_var: JPL_DOCKERUSER
-  #       password_var: JPL_DOCKERPASS        
-
+    github.com/EOSC-synergy/sqa-composer-templates:
+      branch: feature/dynamic_tool_gathering
+      repo: https://github.com/EOSC-synergy/sqa-composer-templates
+environment: {}
 sqa_criteria:
-  qc_doc:
+  QC.FAIR:
     repos:
-      fuji_app_repo:
-        container: fuji_app_container
+      this_repo:
         commands:
-          - >
-            curl --location --request POST 'http://localhost:1071/fuji/api/v1/evaluate' -H 'Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=' -H 'Content-Type: application/json' --data-raw '{ "object_identifier": "https://hdl.handle.net/10261/153475", "test_debug": true, "oaipmh_endpoint": "https://digital.csic.es/dspace-oai/request" }'
-  qc_style:
-    repos:
-      fuji_app_repo:
-        container: fuji-tester 
-        tox:
-          tox_file: /fuji-tester/tox.ini
-          testenv:
-            - stylecheck
-
-# environment:
-#   JPL_DOCKERPUSH: "fuji_app_container"
-  # JPL_DOCKERFORCEBUILD: "true"
-  # JPL_IGNOREFAILURES: "true"
-  # LANG: C.UTF-8
-
-timeout: 900
+        - '/bin/curl -H ''Accept: application/json'' -H ''Content-Type: application/json''
+          -H ''Authorization: Basic bWFydmVsOndvbmRlcndvbWFu'' -X POST -d ''{"metadata_service_endpoint":"http://digital.csic.es/dspace-oai/request","metadata_service_type":"oai_pmh","object_identifier":"http://hdl.handle.net/10261/157765","test_debug":true,"use_datacite":true}''
+          http://localhost:1071/fuji/api/v1/evaluate'
+        container: qc.fair_muzzy-vermilion-flamingo
+timeout: 600
